@@ -84,32 +84,37 @@ resource "aws_autoscaling_group" "autoscaling_group" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_launch_configuration" "launch_configuration" {
-  name_prefix   = "${var.cluster_name}-"
-  image_id      = var.ami_id
-  instance_type = var.instance_type
-  user_data     = var.user_data
-  spot_price    = var.spot_price
+  name_prefix                 = "${var.cluster_name}-"
+  image_id                    = var.ami_id
+  instance_type               = var.instance_type
+  user_data                   = var.user_data
+  spot_price                  = var.spot_price
+  key_name                    = var.ssh_key_name
+  placement_tenancy           = var.tenancy
+  associate_public_ip_address = var.associate_public_ip_address
+  ebs_optimized               = var.root_volume_ebs_optimized
 
   iam_instance_profile = var.enable_iam_setup ? element(
     concat(aws_iam_instance_profile.instance_profile.*.name, [""]),
     0,
   ) : var.iam_instance_profile_name
-  key_name = var.ssh_key_name
 
   security_groups = concat(
     [aws_security_group.lc_security_group.id],
     var.additional_security_group_ids,
   )
-  placement_tenancy           = var.tenancy
-  associate_public_ip_address = var.associate_public_ip_address
-
-  ebs_optimized = var.root_volume_ebs_optimized
 
   root_block_device {
     volume_type           = var.root_volume_type
     volume_size           = var.root_volume_size
     delete_on_termination = var.root_volume_delete_on_termination
     encrypted             = var.root_volume_encrypted
+  }
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
   }
 
   # Important note: whenever using a launch configuration with an auto scaling group, you must set
