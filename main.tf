@@ -91,6 +91,8 @@ module "consul_servers" {
   allowed_inbound_cidr_blocks = ["0.0.0.0/0"]
   ssh_key_name                = var.ssh_key_name
 
+  enable_instance_refresh = var.enable_instance_refresh
+
   tags = [
     {
       key                 = "Environment"
@@ -136,6 +138,7 @@ module "consul_clients" {
 
   allowed_inbound_cidr_blocks = ["0.0.0.0/0"]
   ssh_key_name                = var.ssh_key_name
+  enable_instance_refresh     = var.enable_instance_refresh
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
