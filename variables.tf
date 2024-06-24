@@ -65,3 +65,9 @@ variable "enable_https_port" {
   type        = bool
   default     = false
 }
+
+variable "enable_instance_refresh" {
+  description = "Whether to automatically trigger instance refreshes"
+  type        = bool
+  default     = false
+}

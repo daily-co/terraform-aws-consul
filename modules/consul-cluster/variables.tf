@@ -315,3 +315,9 @@ variable "protect_from_scale_in" {
   type        = bool
   default     = false
 }
+
+variable "enable_instance_refresh" {
+  description = "Whether to automatically trigger instance refreshes"
+  type        = bool
+  default     = false
+}

@@ -72,6 +72,13 @@ resource "aws_autoscaling_group" "autoscaling_group" {
     }
   }
 
+  dynamic "instance_refresh" {
+    for_each = var.enable_instance_refresh ? [true] : []
+    content {
+      strategy = "Rolling"
+    }
+  }
+
   lifecycle {
     # As of AWS Provider 3.x, inline load_balancers and target_group_arns
     # in an aws_autoscaling_group take precedence over attachment resources.
